@@ -25,18 +25,18 @@ def check_row():
             if p_judge>=5:
                 #盤面の描画
                 display_bord()
-                print '\n\n'
-                print 'You Win'
-                print '\n\n'
+                print ('\n\n')
+                print ('You Win')
+                print ('\n\n')
                 exit(-1)
             
             if e_judge>=5:
                 #盤面の描画
                 display_bord()
                 
-                print '\n\n'
-                print 'You Lose'
-                print '\n\n'
+                print ('\n\n')
+                print ('You Lose')
+                print ('\n\n')
                 exit(-1)
 
 
@@ -61,18 +61,18 @@ def check_colmun():
                 #盤面の描画
                 display_bord()
                 
-                print '\n\n'                    
-                print 'You Win'
-                print '\n\n'
+                print ('\n\n')                    
+                print ('You Win')
+                print ('\n\n')
                 exit(-1)
                 break
             
             if e_judge>=5:
                 #盤面の描画
                 display_bord()
-                print '\n\n'
-                print 'You Lose'
-                print '\n\n'
+                print ('\n\n')
+                print ('You Lose')
+                print ('\n\n')
                 exit(-1)
                 break
 
@@ -97,8 +97,8 @@ def check_slanting_right():
                     #盤面の描画
                     display_bord()
                 
-                    print 'You Win'
-                    print '\n\n'
+                    print ('You Win')
+                    print ('\n\n')
                     exit(-1)
                     break
                 
@@ -106,9 +106,9 @@ def check_slanting_right():
                     #盤面の描画
                     display_bord()
                 
-                    print '\n\n'                        
-                    print 'You Lose'
-                    print '\n\n'
+                    print ('\n\n')                        
+                    print ('You Lose')
+                    print ('\n\n')
                     exit(-1)
                     break
 
@@ -134,16 +134,16 @@ def check_slanting_left():
                     #盤面の描画
                     display_bord()
                 
-                    print 'You Win'
-                    print '\n\n'
+                    print ('You Win')
+                    print ('\n\n')
                     exit(-1)
                 
                 if e_judge>=5:
                     #盤面の描画
                     display_bord()
                 
-                    print 'You Lose'
-                    print '\n\n'
+                    print ('You Lose')
+                    print ('\n\n')
                     exit(-1)
 
 #引き分け判定
@@ -153,27 +153,38 @@ def check_draw():
         #盤面の描画
         display_bord()
                 
-        print 'Draw'
-        print '\n\n'
+        print ('Draw')
+        print ('\n\n')
         exit(-1)
 
 
 #プレイヤーのターン
 def player_turn():
-    print 'Your Turn'
+    print ('Your Turn')
     
-    p_x_pos = input('select ball x pos > ')
-    p_y_pos = input('select ball y pos > ')
-    while bord[p_y_pos-1][p_x_pos-1] == 1 or  bord[p_y_pos-1][p_x_pos-1] == 2 or p_x_pos<1 or p_x_pos>15 or  p_y_pos<1 or p_y_pos>15: 
+    type_error = False #入力の型が数字かどうかチェックするフラグ
+    try:
+        p_x_pos = int(input('select ball x pos > '))
+        p_y_pos = int(input('select ball y pos > '))
+    except:#入力が数字でない
+        type_error = True
+    while  type_error or p_x_pos<1 or p_x_pos>15 or  p_y_pos<1 or p_y_pos>15 or bord[p_y_pos-1][p_x_pos-1] == 1 or  bord[p_y_pos-1][p_x_pos-1] == 2 : 
+    #while p_x_pos<1 or p_x_pos>15 or  p_y_pos<1 or p_y_pos>15 or bord[p_y_pos-1][p_x_pos-1] == 1 or  bord[p_y_pos-1][p_x_pos-1] == 2: 
+        type_error = False
 
-        print 'please retry'
-        p_x_pos = input('select ball x pos > ')
-        p_y_pos = input('select ball y pos > ')
+        print ('please retry')
+        try:
+            p_x_pos = int(input('select ball x pos > '))
+            p_y_pos = int(input('select ball y pos > '))
+        except:
+            type_error = True
+
+
     bord[p_y_pos-1][p_x_pos-1] = 1
 
 #敵のターン
 def enemy_turn():
-    print 'Enemy Turn'
+    print ('Enemy Turn')
     
     #敵(ランダム)で配置
     e_x_pos = random.randint(0,14)
@@ -194,17 +205,17 @@ def display_bord():
     for i in range(15):
         for j in range(15):
             if  bord[i][j]==0:
-                print pycolor.WHITE+'+'+ pycolor.END,
+                print (pycolor.WHITE+'+'+ pycolor.END, end=' ')
 
             elif bord[i][j]==1:
-                print pycolor.RED+'●'+pycolor.END,
+                print (pycolor.RED+'●'+pycolor.END, end=' ')
 
             elif bord[i][j]==2:
-                print pycolor.BLUE+'■'+pycolor.END,
+                print (pycolor.BLUE+'■'+pycolor.END, end=' ')
 
-        print '\n',
-    print '[You]'+pycolor.RED+'●'+pycolor.END, '\t[Enemy]'+pycolor.BLUE+'■'+pycolor.END,
-    print '\n\n'
+        print ('\n',end='')
+    print ('[You]'+pycolor.RED+'●'+pycolor.END + '\t[Enemy]'+pycolor.BLUE+'■'+pycolor.END, end='')
+    print ('\n\n')
 
 class pycolor:
     BLACK = '\033[30m'
