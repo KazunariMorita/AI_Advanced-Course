@@ -452,8 +452,9 @@ if __name__ == '__main__':
         #プレイヤーのターン
         env.player_turn()
 
-        #勝敗判定
-        env.winner()
+    #勝敗判定
+    if env.winner()==True:
+        end_flag=True
 
         #敵のターン
         env.enemy_turn()
