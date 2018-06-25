@@ -46,7 +46,7 @@ class Gomokunarabe:
                     #盤面の描画
                     # self.display_screen()
                     print ('\n\n')
-                    print ('You Win a')
+                    print ('You Win')
                     print ('\n\n')
                     return 1
                 
@@ -55,7 +55,7 @@ class Gomokunarabe:
                     # self.display_screen()
                     
                     print('\n\n')
-                    print('You Lose a')
+                    print('You Lose')
                     print('\n\n')
                     return 2
 
@@ -81,7 +81,7 @@ class Gomokunarabe:
                     # self.display_screen()
                     
                     print ('\n\n')                    
-                    print ('You Win b')
+                    print ('You Win')
                     print ('\n\n')
                     return 1
                 
@@ -89,7 +89,7 @@ class Gomokunarabe:
                     #盤面の描画
                     # self.display_screen()
                     print ('\n\n')
-                    print ('You Lose b')
+                    print ('You Lose')
                     print ('\n\n')
                     return 2
 
@@ -115,7 +115,7 @@ class Gomokunarabe:
                         #盤面の描画
                         # self.display_screen()
                     
-                        print ('You Win c')
+                        print ('You Win')
                         print ('\n\n')
                         return 1
                     
@@ -124,7 +124,7 @@ class Gomokunarabe:
                         # self.display_screen()
                     
                         print ('\n\n')                        
-                        print ('You Lose c')
+                        print ('You Lose')
                         print ('\n\n')
                         return 2
 
@@ -149,7 +149,7 @@ class Gomokunarabe:
                         #盤面の描画
                         # self.display_screen()
                     
-                        print ('You Win d')
+                        print ('You Win')
                         print ('\n\n')
                         return 1
                     
@@ -157,7 +157,7 @@ class Gomokunarabe:
                         #盤面の描画
                         # self.display_screen()
                     
-                        print ('You Lose d')
+                        print ('You Lose')
                         print ('\n\n')
                         return 2
 
@@ -452,9 +452,18 @@ if __name__ == '__main__':
         #プレイヤーのターン
         env.player_turn()
 
-    #勝敗判定
-    if env.winner()==True:
-        end_flag=True
+
+        # print(env.winner())
+        
+        #勝敗判定
+        if env.winner()==1 or env.winner()==2:
+            env.display_screen()
+            # print(env.winner())
+            # print('aa')
+            end_flag=True
+            break
 
         #敵のターン
-        env.enemy_turn()
+        env.enemy_turn()    
+
+
