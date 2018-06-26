@@ -19,6 +19,8 @@ class Gomokunarabe:
         self.screen_n_cols = 15
         self.enable_actions = np.arange(self.screen_n_cols*self.screen_n_rows)
         self.screen = np.zeros((self.screen_n_rows, self.screen_n_cols))
+        self.p_x_pos = 0
+        self.p_y_pos = 0
 
     def reset(self):
         """ 盤面の初期化 """
@@ -27,37 +29,52 @@ class Gomokunarabe:
 
     #勝った方のラベル返す(いたら)
     def winner(self):
-        #横の判定  
-        for i in range(15):
-            p_judge=0
-            e_judge=0        
-            for j in range(15):
-                if self.screen[i][j]==1:
-                    p_judge+=1
-                    e_judge=0
-                if self.screen[i][j]==2:
-                    e_judge+=1
-                    p_judge=0
-                if self.screen[i][j]==0:
-                    #もし, 連続していなかったら0
-                    p_judge=0
-                    e_judge=0
-                if p_judge>=5:
-                    #盤面の描画
-                    # self.display_screen()
-                    print ('\n\n')
-                    print ('You Win')
-                    print ('\n\n')
-                    return 1
+        #横の判定
+        for i in range(5):
+            if np.all(self.screen[self.p_y_pos, self.p_x_pos-4+i:self.p_x_pos+1+i] == 1) == True:
+                print ('\n\n')
+                print ('You Win')
+                print ('\n\n')
+                return 1
+            if np.all(self.screen[self.p_y_pos, self.p_x_pos-4+i:self.p_x_pos+i] == 2) == True:
+                print ('\n\n')
+                print ('You Lose')
+                print ('\n\n')                
+                return 2
                 
-                if e_judge>=5:
-                    #盤面の描画
-                    # self.display_screen()
+
+
+        #横の判定  
+        # for i in range(15):
+        #     p_judge=0
+        #     e_judge=0        
+        #     for j in range(15):
+        #         if self.screen[i][j]==1:
+        #             p_judge+=1
+        #             e_judge=0
+        #         if self.screen[i][j]==2:
+        #             e_judge+=1
+        #             p_judge=0
+        #         if self.screen[i][j]==0:
+        #             #もし, 連続していなかったら0
+        #             p_judge=0
+        #             e_judge=0
+        #         if p_judge>=5:
+        #             #盤面の描画
+        #             # self.display_screen()
+        #             print ('\n\n')
+        #             print ('You Win')
+        #             print ('\n\n')
+        #             return 1
+                
+        #         if e_judge>=5:
+        #             #盤面の描画
+        #             # self.display_screen()
                     
-                    print('\n\n')
-                    print('You Lose')
-                    print('\n\n')
-                    return 2
+        #             print('\n\n')
+        #             print('You Lose')
+        #             print('\n\n')
+        #             return 2
 
 
         #縦の判定
@@ -379,6 +396,8 @@ class Gomokunarabe:
             p_x_pos = input('select ball x pos > ')
             p_y_pos = input('select ball y pos > ')
         self.screen[int(p_y_pos)-1][int(p_x_pos)-1] = 1
+        self.p_x_pos = int(p_x_pos) - 1
+        self.p_y_pos = int(p_y_pos) - 1
 
     #敵のターン
     def enemy_turn(self):
