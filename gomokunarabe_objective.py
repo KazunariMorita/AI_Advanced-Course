@@ -373,7 +373,7 @@ class Gomokunarabe:
         
         p_x_pos = input('select ball x pos > ')
         p_y_pos = input('select ball y pos > ')
-        while self.screen[int(p_y_pos)-1][int(p_x_pos)-1] == 1 or  self.screen[int(p_y_pos)-1][int(p_x_pos)-1] == 2 or int(p_x_pos)<1 or int(p_x_pos)>15 or  int(p_y_pos)<1 or int(p_y_pos)>15: 
+        while int(p_x_pos)<1 or int(p_x_pos)>15 or  int(p_y_pos)<1 or int(p_y_pos)>15 or self.screen[int(p_y_pos)-1][int(p_x_pos)-1] == 1 or  self.screen[int(p_y_pos)-1][int(p_x_pos)-1] == 2: 
 
             print ('please retry')
             p_x_pos = input('select ball x pos > ')
@@ -408,13 +408,13 @@ class Gomokunarabe:
                 #     print ('\n',end='')
 
                 if  self.screen[i][j]==0:
-                    print (pycolor.WHITE+'+'+ pycolor.END, end='')
+                    print (pycolor.WHITE+'+ '+ pycolor.END, end='')
 
                 elif self.screen[i][j]==1:
-                    print (pycolor.RED+'●'+pycolor.END, end='')
+                    print (pycolor.RED+'● '+pycolor.END, end='')
 
                 elif self.screen[i][j]==2:
-                    print (pycolor.BLUE+'■'+pycolor.END, end='')
+                    print (pycolor.BLUE+'■ '+pycolor.END, end='')
 
             print ('\n', end='')
             
