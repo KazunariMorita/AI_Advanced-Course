@@ -7,6 +7,8 @@ import sys
 #2018/06/19
 #made by Kazunari Morita
 
+#use joblib
+from joblib import Parallel, delayed
 
 class Gomokunarabe:
 
@@ -25,62 +27,93 @@ class Gomokunarabe:
         # reset ball position
         self.screen = np.zeros((self.screen_n_rows, self.screen_n_cols))
 
-    #勝った方のラベル返す(いたら)
-    def winner(self):
+    def search_width(self, i):
         #横の判定  
-        for i in range(15):
-            p_judge=0
-            e_judge=0        
-            for j in range(15):
-                if self.screen[i][j]==1:
-                    p_judge+=1
-                    e_judge=0
-                if self.screen[i][j]==2:
-                    e_judge+=1
-                    p_judge=0
-                if self.screen[i][j]==0:
-                    #もし, 連続していなかったら0
-                    p_judge=0
-                    e_judge=0
-                if p_judge>=5:
-                    #盤面の描画
-                    # self.display_screen()
-                    print ('\n\n')
-                    print ('You Win')
-                    print ('\n\n')
-                    return 1
+        p_judge=0
+        e_judge=0        
+        for j in range(15):
+            if self.screen[i][j]==1:
+                p_judge+=1
+                e_judge=0
+            if self.screen[i][j]==2:
+                e_judge+=1
+                p_judge=0
+            if self.screen[i][j]==0:
+                #もし, 連続していなかったら0
+                p_judge=0
+                e_judge=0
+            if p_judge>=5:
+                #盤面の描画
+                # self.display_screen()
+                print ('\n\n')
+                print ('You Win')
+                print ('\n\n')
+                return 1
+            
+            if e_judge>=5:
+                #盤面の描画
+                # self.display_screen()
                 
-                if e_judge>=5:
-                    #盤面の描画
-                    # self.display_screen()
-                    
-                    print('\n\n')
-                    print('You Lose')
-                    print('\n\n')
-                    return 2
+                print('\n\n')
+                print('You Lose')
+                print('\n\n')
+                return 2
 
+    def search_height(self, i):
+        #縦探索
+        p_judge=0
+        e_judge=0
+        for j in range(15):
+            if self.screen[j][i]==1:
+                p_judge+=1
+                e_judge=0
+            if self.screen[j][i]==2:
+                e_judge+=1
+                p_judge=0
+            if self.screen[j][i]==0:
+                #もし, 連続していなかったら0
+                p_judge=0
+                e_judge=0
+    
+            if p_judge>=5:
+                #盤面の描画
+                # self.display_screen()
+                
+                print ('\n\n')                    
+                print ('You Win')
+                print ('\n\n')
+                return 1
+            
+            if e_judge>=5:
+                #盤面の描画
+                # self.display_screen()
+                print ('\n\n')
+                print ('You Lose')
+                print ('\n\n')
+                return 2
 
-        #縦の判定
-        for i in range(15):
+    def search_Diagonally_right(self, i):
+        #斜め右下
+        for j in range(11):
             p_judge=0
             e_judge=0
-            for j in range(15):
-                if self.screen[j][i]==1:
+            for k in range(5):
+                if self.screen[i+k][j+k]==1:
                     p_judge+=1
                     e_judge=0
-                if self.screen[j][i]==2:
+                if self.screen[i+k][j+k]==2:
                     e_judge+=1
                     p_judge=0
-                if self.screen[j][i]==0:
+
+                if self.screen[i+k][j+k]==0:
                     #もし, 連続していなかったら0
                     p_judge=0
                     e_judge=0
-        
+
                 if p_judge>=5:
                     #盤面の描画
                     # self.display_screen()
-                    
-                    print ('\n\n')                    
+                
                     print ('You Win')
                     print ('\n\n')
                     return 1
@@ -88,89 +121,230 @@ class Gomokunarabe:
                 if e_judge>=5:
                     #盤面の描画
                     # self.display_screen()
-                    print ('\n\n')
+                
+                    print ('\n\n')                        
                     print ('You Lose')
                     print ('\n\n')
-                    return 2
+                    return 2   
 
-        #斜め(右下)の判定
-        for i in range(11):
-            for j in range(11):
-                p_judge=0
-                e_judge=0
-                for k in range(5):
-                    if self.screen[i+k][j+k]==1:
-                        p_judge+=1
-                        e_judge=0
-                    if self.screen[i+k][j+k]==2:
-                        e_judge+=1
-                        p_judge=0
+    def search_Diagonally_left(self, i):
+        #斜め左下
+        for j in range(4,15):
+            p_judge=0
+            e_judge=0
+            for k in range(5):
+                if self.screen[i+k][j-k]==1:
+                    p_judge+=1
+                    e_judge=0
+                if self.screen[i+k][j-k]==2:
+                    e_judge+=1
+                    p_judge=0
+                if self.screen[i+k][j-k]==0:
+                    #もし, 連続していなかったら0
+                    p_judge=0
+                    e_judge=0
 
-                    if self.screen[i+k][j+k]==0:
-                        #もし, 連続していなかったら0
-                        p_judge=0
-                        e_judge=0
+                if p_judge>=5:
+                    #盤面の描画
+                    # self.display_screen()
+                
+                    print ('You Win')
+                    print ('\n\n')
+                    return 1
+                
+                if e_judge>=5:
+                    #盤面の描画
+                    # self.display_screen()
+                
+                    print ('You Lose')
+                    print ('\n\n')
+                    return 2        
 
-                    if p_judge>=5:
-                        #盤面の描画
-                        # self.display_screen()
-                    
-                        print ('You Win')
-                        print ('\n\n')
-                        return 1
-                    
-                    if e_judge>=5:
-                        #盤面の描画
-                        # self.display_screen()
-                    
-                        print ('\n\n')                        
-                        print ('You Lose')
-                        print ('\n\n')
-                        return 2
+    def winner(self, search_width, search_height, search_Diagonally_right, search_Diagonally_left):
+        #横の判定
+        return_win = Parallel(n_jobs=-1)( [delayed(search_width)(i) for i in range(15)] )
+        if return_win == 1 or return_win == 2:
+            return return_win
+        # for i in range(15):
+        #     search_width(i)
 
-        #斜め(左下)の判定    
-        for i in range(11):
-            for j in range(4,15):
-                p_judge=0
-                e_judge=0
-                for k in range(5):
-                    if self.screen[i+k][j-k]==1:
-                        p_judge+=1
-                        e_judge=0
-                    if self.screen[i+k][j-k]==2:
-                        e_judge+=1
-                        p_judge=0
-                    if self.screen[i+k][j-k]==0:
-                        #もし, 連続していなかったら0
-                        p_judge=0
-                        e_judge=0
+        
+        #縦の判定
+        return_win = Parallel(n_jobs=-1)( [delayed(search_height)(i) for i in range(15)] )
+        if return_win == 1 or return_win == 2:
+            return return_win
+        # for i in range(15):
+        #     search_height(i)
 
-                    if p_judge>=5:
-                        #盤面の描画
-                        # self.display_screen()
-                    
-                        print ('You Win')
-                        print ('\n\n')
-                        return 1
-                    
-                    if e_judge>=5:
-                        #盤面の描画
-                        # self.display_screen()
-                    
-                        print ('You Lose')
-                        print ('\n\n')
-                        return 2
+        
+        #斜め右下の判定
+        return_win = Parallel(n_jobs=-1)( [delayed(search_Diagonally_right)(i) for i in range(11)] )
+        if return_win == 1 or return_win == 2:
+            return return_win
+        # for i in range(11):
+        #     search_Diagonally_right(i)
 
-        #引き分け判定
+        #斜め右下の判定
+        return_win = Parallel(n_jobs=-1)( [delayed(search_Diagonally_left)(i) for i in range(11)] )
+        if return_win == 1 or return_win == 2:
+            return return_win
+        # for i in range(11):
+        #     search_Diagonally_left(i)
+
+            #引き分け判定
         if 0 not in self.screen:
             #盤面の描画
             # self.display_screen()
-                    
             print ('Draw')
             print ('\n\n')
             return 0
 
         return False
+
+        #斜め左下の判定2
+    #     for i in range(15):
+    #         p_judge=0
+    #         e_judge=0        
+    #         for j in range(15):
+    #             if self.screen[i][j]==1:
+    #                 p_judge+=1
+    #                 e_judge=0
+    #             if self.screen[i][j]==2:
+    #                 e_judge+=1
+    #                 p_judge=0
+    #             if self.screen[i][j]==0:
+    #                 #もし, 連続していなかったら0
+    #                 p_judge=0
+    #                 e_judge=0
+    #             if p_judge>=5:
+    #                 #盤面の描画
+    #                 # self.display_screen()
+    #                 print ('\n\n')
+    #                 print ('You Win')
+    #                 print ('\n\n')
+    #                 return 1
+                
+    #             if e_judge>=5:
+    #                 #盤面の描画
+    #                 # self.display_screen()
+                    
+    #                 print('\n\n')
+    #                 print('You Lose')
+    #                 print('\n\n')
+    #                 return 2
+
+
+    #     #縦の判定
+    #     for i in range(15):
+    #         p_judge=0
+    #         e_judge=0
+    #         for j in range(15):
+    #             if self.screen[j][i]==1:
+    #                 p_judge+=1
+    #                 e_judge=0
+    #             if self.screen[j][i]==2:
+    #                 e_judge+=1
+    #                 p_judge=0
+    #             if self.screen[j][i]==0:
+    #                 #もし, 連続していなかったら0
+    #                 p_judge=0
+    #                 e_judge=0
+        
+    #             if p_judge>=5:
+    #                 #盤面の描画
+    #                 # self.display_screen()
+                    
+    #                 print ('\n\n')                    
+    #                 print ('You Win')
+    #                 print ('\n\n')
+    #                 return 1
+                
+    #             if e_judge>=5:
+    #                 #盤面の描画
+    #                 # self.display_screen()
+    #                 print ('\n\n')
+    #                 print ('You Lose')
+    #                 print ('\n\n')
+    #                 return 2
+
+    #     #斜め(右下)の判定
+    #     for i in range(11):
+    #         for j in range(11):
+    #             p_judge=0
+    #             e_judge=0
+    #             for k in range(5):
+    #                 if self.screen[i+k][j+k]==1:
+    #                     p_judge+=1
+    #                     e_judge=0
+    #                 if self.screen[i+k][j+k]==2:
+    #                     e_judge+=1
+    #                     p_judge=0
+
+    #                 if self.screen[i+k][j+k]==0:
+    #                     #もし, 連続していなかったら0
+    #                     p_judge=0
+    #                     e_judge=0
+
+    #                 if p_judge>=5:
+    #                     #盤面の描画
+    #                     # self.display_screen()
+                    
+    #                     print ('You Win')
+    #                     print ('\n\n')
+    #                     return 1
+                    
+    #                 if e_judge>=5:
+    #                     #盤面の描画
+    #                     # self.display_screen()
+                    
+    #                     print ('\n\n')                        
+    #                     print ('You Lose')
+    #                     print ('\n\n')
+    #                     return 2
+
+    #     #斜め(左下)の判定    
+    #     for i in range(11):
+    #         for j in range(4,15):
+    #             p_judge=0
+    #             e_judge=0
+    #             for k in range(5):
+    #                 if self.screen[i+k][j-k]==1:
+    #                     p_judge+=1
+    #                     e_judge=0
+    #                 if self.screen[i+k][j-k]==2:
+    #                     e_judge+=1
+    #                     p_judge=0
+    #                 if self.screen[i+k][j-k]==0:
+    #                     #もし, 連続していなかったら0
+    #                     p_judge=0
+    #                     e_judge=0
+
+    #                 if p_judge>=5:
+    #                     #盤面の描画
+    #                     # self.display_screen()
+                    
+    #                     print ('You Win')
+    #                     print ('\n\n')
+    #                     return 1
+                    
+    #                 if e_judge>=5:
+    #                     #盤面の描画
+    #                     # self.display_screen()
+                    
+    #                     print ('You Lose')
+    #                     print ('\n\n')
+    #                     return 2
+
+    #     #引き分け判定
+    #     if 0 not in self.screen:
+    #         #盤面の描画
+    #         # self.display_screen()
+                    
+    #         print ('Draw')
+    #         print ('\n\n')
+    #         return 0
+
+    #     return False
 
 
 
@@ -360,7 +534,7 @@ class Gomokunarabe:
         # for action in self.enable_actions:
             # if self.get_cells(action) == self.Blank:
         # self.display_screen()
-        return self.winner() 
+        return self.winner(env.search_width,env.search_height,env.search_Diagonally_right,env.search_Diagonally_left) 
         
         # return True    
         
@@ -456,7 +630,7 @@ if __name__ == '__main__':
         # print(env.winner())
         
         #勝敗判定
-        if env.winner()==1 or env.winner()==2:
+        if env.winner(env.search_width,env.search_height,env.search_Diagonally_right,env.search_Diagonally_left)==1 or env.winner(env.search_width,env.search_height,env.search_Diagonally_right,env.search_Diagonally_left)==2:
             env.display_screen()
             # print(env.winner())
             # print('aa')
