@@ -351,6 +351,7 @@ if __name__ == '__main__':
         #start = time.time()
         end_flag = env.isEnd()
         if end_flag == True:
+            env.display_screen()
             break
 
         #end = time.time() - start
@@ -360,4 +361,5 @@ if __name__ == '__main__':
 
         end_flag = env.isEnd()
         if end_flag == True:
+            env.display_screen()
             break
