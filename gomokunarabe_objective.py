@@ -21,6 +21,7 @@ class Gomokunarabe:
         self.screen = np.zeros((self.screen_n_rows, self.screen_n_cols), dtype=np.int8)
         self.last_x_pos = 0
         self.last_y_pos = 0
+        self.win_flag = 0
 
 
     def reset(self):
@@ -40,12 +41,14 @@ class Gomokunarabe:
                 print ('\n\n')
                 print ('You Win')
                 print ('\n\n')
-                return self.White
+                self.win_flag = self.White
+                return self.win_flag
             if (width == -5) or (height == -5) or (right_diagonal == -5) or (left_diagonal == -5):
                 print ('\n\n')
                 print ('You Lose')
-                print ('\n\n')                
-                return self.Black
+                print ('\n\n')   
+                self.win_flag = self.Black
+                return self.win_flag             
         #引き分け判定
         if 0 not in self.screen:
             #盤面の描画
@@ -53,7 +56,8 @@ class Gomokunarabe:
                     
             print ('Draw')
             print ('\n\n')
-            return 2
+            self.win_flag = 2
+            return self.win_flag
 
         
         return False
@@ -246,8 +250,7 @@ class Gomokunarabe:
         # for action in self.enable_actions:
             # if self.get_cells(action) == self.Blank:
         # self.display_screen()
-        flag = self.winner()
-        if flag == self.White or flag == self.Black or flag == 2:
+        if self.win_flag == self.White or self.win_flag == self.Black or self.win_flag == 2:
             return True    
         else:
             return False
