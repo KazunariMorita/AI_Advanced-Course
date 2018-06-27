@@ -13,7 +13,7 @@ if __name__ == "__main__":
     env = Gomokunarabe()
  
     # playerID    
-    playerID = [env.Black,env.White,env.Blank]#env.Blank, 
+    playerID = [env.Black,env.White,env.Blank]#env.Blank, [-1,1,0]
 
     # player agent    
     players = []
@@ -42,7 +42,7 @@ if __name__ == "__main__":
                         tmp = copy.deepcopy(env)
                         tmp.update(tr, playerID[i])
                         #終了判定
-                        win = tmp.winner()
+                        tmp.win_flag = tmp.winner()
                         end = tmp.isEnd()
                         #次の状態
                         state_X = tmp.screen
@@ -56,7 +56,7 @@ if __name__ == "__main__":
                         for j in range(0, len(players)):
                             reword = 0
                             if end == True:
-                                if win == playerID[j]:
+                                if tmp.win_flag == playerID[j]:
                                     # 勝ったら報酬1を得る
                                     reword = 1
                            
