@@ -346,7 +346,7 @@ if __name__ == '__main__':
         # print(env.winner())
         
         #勝敗判定
-        start = time.time()
+        #start = time.time()
         if env.winner() == env.White:
             env.display_screen()
             # print(env.winner())
@@ -354,8 +354,8 @@ if __name__ == '__main__':
             end_flag=True
             break
 
-        end = time.time() - start
-        print("winner判定に" + str(end) + "[s]")
+        #end = time.time() - start
+        #print("winner判定に" + str(end) + "[s]")
         #敵のターン
         env.enemy_turn()    
 
