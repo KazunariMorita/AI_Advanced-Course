@@ -348,7 +348,7 @@ if __name__ == '__main__':
         # print(env.winner())
         
         #勝敗判定
-        if env.winner()== (env.White or env.Black):
+        if env.winner() == env.White:
             env.display_screen()
             # print(env.winner())
             # print('aa')
@@ -358,7 +358,7 @@ if __name__ == '__main__':
         #敵のターン
         env.enemy_turn()    
 
-        if env.winner()== (env.White or env.Black):
+        if env.winner()== env.Black:
             env.display_screen()
             # print(env.winner())
             # print('aa')
