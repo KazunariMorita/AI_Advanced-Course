@@ -1,5 +1,5 @@
 import copy
-from gomokunarabe import Gomokunarabe
+from gomokunarabe_objective import Gomokunarabe
 # from Reversi import Reversi
 from dqn_agent import DQNAgent
 
@@ -82,7 +82,7 @@ if __name__ == "__main__":
                 # print (env.screen)
 
         env.display_screen()
-        print (env.screen)                      
+        #print (env.screen)                      
         w = env.winner()
         # print (w)
                             

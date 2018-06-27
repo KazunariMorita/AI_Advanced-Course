@@ -53,7 +53,7 @@ class Gomokunarabe:
                     
             print ('Draw')
             print ('\n\n')
-            return 0
+            return 2
 
         
         return False
@@ -246,9 +246,11 @@ class Gomokunarabe:
         # for action in self.enable_actions:
             # if self.get_cells(action) == self.Blank:
         # self.display_screen()
-        return self.winner() 
-        
-        # return True    
+        flag = self.winner()
+        if flag == self.White or flag == self.Black or flag == 2:
+            return True    
+        else:
+            return False
         
 
 
@@ -347,11 +349,8 @@ if __name__ == '__main__':
         
         #勝敗判定
         #start = time.time()
-        if env.winner() == env.White:
-            env.display_screen()
-            # print(env.winner())
-            # print('aa')
-            end_flag=True
+        end_flag = env.isEnd()
+        if end_flag == True:
             break
 
         #end = time.time() - start
@@ -359,10 +358,6 @@ if __name__ == '__main__':
         #敵のターン
         env.enemy_turn()    
 
-        if env.winner()== env.Black:
-            env.display_screen()
-            # print(env.winner())
-            # print('aa')
-            end_flag=True
+        end_flag = env.isEnd()
+        if end_flag == True:
             break
-
