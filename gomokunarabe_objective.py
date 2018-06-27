@@ -14,13 +14,14 @@ class Gomokunarabe:
         self.name = os.path.splitext(os.path.basename(__file__))[0]
         self.Blank = 0
         self.White = 1
-        self.Black = 2
+        self.Black = -1
         self.screen_n_rows = 15
         self.screen_n_cols = 15
         self.enable_actions = np.arange(self.screen_n_cols*self.screen_n_rows)
         self.screen = np.zeros((self.screen_n_rows, self.screen_n_cols))
-        self.p_x_pos = 0
-        self.p_y_pos = 0
+        self.last_x_pos = 0
+        self.last_y_pos = 0
+
 
     def reset(self):
         """ 盤面の初期化 """
@@ -29,87 +30,20 @@ class Gomokunarabe:
 
     #勝った方のラベル返す(いたら)
     def winner(self):
-        #横の判定
+        #横と縦の判定
         for i in range(5):
-            if np.all(self.screen[self.p_y_pos, self.p_x_pos-4+i:self.p_x_pos+1+i] == 1) == True:
+            if (np.sum(self.screen[self.last_y_pos, self.last_x_pos-4+i:self.last_x_pos+1+i]) == 5) == True or (np.sum(self.screen[self.last_y_pos-4+i:self.last_y_pos+1+i, self.last_x_pos]) == 5) == True:
                 print ('\n\n')
                 print ('You Win')
                 print ('\n\n')
-                return 1
-            if np.all(self.screen[self.p_y_pos, self.p_x_pos-4+i:self.p_x_pos+i] == 2) == True:
+                return self.White
+            if (np.sum(self.screen[self.last_y_pos, self.last_x_pos-4+i:self.last_x_pos+i]) == -5) == True or (np.sum(self.screen[self.last_y_pos-4+i:self.last_y_pos+1+i, self.last_x_pos]) == -5) == True:
                 print ('\n\n')
                 print ('You Lose')
                 print ('\n\n')                
-                return 2
-                
+                return self.Black
 
-
-        #横の判定  
-        # for i in range(15):
-        #     p_judge=0
-        #     e_judge=0        
-        #     for j in range(15):
-        #         if self.screen[i][j]==1:
-        #             p_judge+=1
-        #             e_judge=0
-        #         if self.screen[i][j]==2:
-        #             e_judge+=1
-        #             p_judge=0
-        #         if self.screen[i][j]==0:
-        #             #もし, 連続していなかったら0
-        #             p_judge=0
-        #             e_judge=0
-        #         if p_judge>=5:
-        #             #盤面の描画
-        #             # self.display_screen()
-        #             print ('\n\n')
-        #             print ('You Win')
-        #             print ('\n\n')
-        #             return 1
-                
-        #         if e_judge>=5:
-        #             #盤面の描画
-        #             # self.display_screen()
-                    
-        #             print('\n\n')
-        #             print('You Lose')
-        #             print('\n\n')
-        #             return 2
-
-
-        #縦の判定
-        for i in range(15):
-            p_judge=0
-            e_judge=0
-            for j in range(15):
-                if self.screen[j][i]==1:
-                    p_judge+=1
-                    e_judge=0
-                if self.screen[j][i]==2:
-                    e_judge+=1
-                    p_judge=0
-                if self.screen[j][i]==0:
-                    #もし, 連続していなかったら0
-                    p_judge=0
-                    e_judge=0
-        
-                if p_judge>=5:
-                    #盤面の描画
-                    # self.display_screen()
-                    
-                    print ('\n\n')                    
-                    print ('You Win')
-                    print ('\n\n')
-                    return 1
-                
-                if e_judge>=5:
-                    #盤面の描画
-                    # self.display_screen()
-                    print ('\n\n')
-                    print ('You Lose')
-                    print ('\n\n')
-                    return 2
-
+            
         #斜め(右下)の判定
         for i in range(11):
             for j in range(11):
@@ -119,7 +53,7 @@ class Gomokunarabe:
                     if self.screen[i+k][j+k]==1:
                         p_judge+=1
                         e_judge=0
-                    if self.screen[i+k][j+k]==2:
+                    if self.screen[i+k][j+k]==-1:
                         e_judge+=1
                         p_judge=0
 
@@ -134,7 +68,7 @@ class Gomokunarabe:
                     
                         print ('You Win')
                         print ('\n\n')
-                        return 1
+                        return self.White
                     
                     if e_judge>=5:
                         #盤面の描画
@@ -143,7 +77,7 @@ class Gomokunarabe:
                         print ('\n\n')                        
                         print ('You Lose')
                         print ('\n\n')
-                        return 2
+                        return self.Black
 
         #斜め(左下)の判定    
         for i in range(11):
@@ -154,7 +88,7 @@ class Gomokunarabe:
                     if self.screen[i+k][j-k]==1:
                         p_judge+=1
                         e_judge=0
-                    if self.screen[i+k][j-k]==2:
+                    if self.screen[i+k][j-k]==-1:
                         e_judge+=1
                         p_judge=0
                     if self.screen[i+k][j-k]==0:
@@ -176,7 +110,7 @@ class Gomokunarabe:
                     
                         print ('You Lose')
                         print ('\n\n')
-                        return 2
+                        return -1
 
         #引き分け判定
         if 0 not in self.screen:
@@ -390,14 +324,14 @@ class Gomokunarabe:
         
         p_x_pos = input('select ball x pos > ')
         p_y_pos = input('select ball y pos > ')
-        while int(p_x_pos)<1 or int(p_x_pos)>15 or  int(p_y_pos)<1 or int(p_y_pos)>15 or self.screen[int(p_y_pos)-1][int(p_x_pos)-1] == 1 or  self.screen[int(p_y_pos)-1][int(p_x_pos)-1] == 2: 
+        while int(p_x_pos)<1 or int(p_x_pos)>15 or  int(p_y_pos)<1 or int(p_y_pos)>15 or self.screen[int(p_y_pos)-1][int(p_x_pos)-1] == self.White or  self.screen[int(p_y_pos)-1][int(p_x_pos)-1] == self.Black: 
 
             print ('please retry')
             p_x_pos = input('select ball x pos > ')
             p_y_pos = input('select ball y pos > ')
-        self.screen[int(p_y_pos)-1][int(p_x_pos)-1] = 1
-        self.p_x_pos = int(p_x_pos) - 1
-        self.p_y_pos = int(p_y_pos) - 1
+        self.screen[int(p_y_pos)-1][int(p_x_pos)-1] = self.White
+        self.last_x_pos = int(p_x_pos) - 1
+        self.last_y_pos = int(p_y_pos) - 1
 
     #敵のターン
     def enemy_turn(self):
@@ -408,13 +342,15 @@ class Gomokunarabe:
         e_y_pos = random.randint(0,14)
         
         #もし, プレイヤーの玉なければ配置, あれば乱数再生成
-        while self.screen[e_y_pos][e_x_pos] == 1 or  self.screen[e_y_pos][e_x_pos] == 2:
+        while self.screen[e_y_pos][e_x_pos] == self.White or  self.screen[e_y_pos][e_x_pos] == self.Black:
         
             #乱数再生成
             e_x_pos = random.randint(0,14)
             e_y_pos = random.randint(0,14)
 
-        self.screen[e_y_pos][e_x_pos] = 2  
+        self.screen[e_y_pos][e_x_pos] = self.Black
+        self.last_x_pos = e_x_pos
+        self.last_y_pos = e_y_pos
 
 
     #盤面の表示
@@ -429,10 +365,10 @@ class Gomokunarabe:
                 if  self.screen[i][j]==0:
                     print (pycolor.WHITE+'+ '+ pycolor.END, end='')
 
-                elif self.screen[i][j]==1:
+                elif self.screen[i][j]==self.White:
                     print (pycolor.RED+'● '+pycolor.END, end='')
 
-                elif self.screen[i][j]==2:
+                elif self.screen[i][j]==self.Black:
                     print (pycolor.BLUE+'■ '+pycolor.END, end='')
 
             print ('\n', end='')
@@ -475,7 +411,7 @@ if __name__ == '__main__':
         # print(env.winner())
         
         #勝敗判定
-        if env.winner()==1 or env.winner()==2:
+        if env.winner()==env.White or env.winner()==env.Black:
             env.display_screen()
             # print(env.winner())
             # print('aa')
@@ -485,4 +421,10 @@ if __name__ == '__main__':
         #敵のターン
         env.enemy_turn()    
 
+        if env.winner()==env.White or env.winner()==env.Black:
+            env.display_screen()
+            # print(env.winner())
+            # print('aa')
+            end_flag=True
+            break
 
