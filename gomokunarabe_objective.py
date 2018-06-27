@@ -6,7 +6,7 @@ import glob
 import sys
 #2018/06/19
 #made by Kazunari Morita
-
+import time
 
 class Gomokunarabe:
 
@@ -456,13 +456,15 @@ if __name__ == '__main__':
         # print(env.winner())
         
         #勝敗判定
+        start = time.time()
         if env.winner()==1 or env.winner()==2:
             env.display_screen()
             # print(env.winner())
             # print('aa')
             end_flag=True
             break
-
+        end = time.time() - start
+        print("winnerに掛かった時間:" + str(end) + "[s]")
         #敵のターン
         env.enemy_turn()    
 
