@@ -30,7 +30,7 @@ class Gomokunarabe:
 
     #勝った方のラベル返す(いたら)
     def winner(self):
-        #start = time.time()
+        start = time.time()
         #横と縦と斜め右下と斜め左下の判定
         for i in range(5):
             width = np.sum(self.screen[self.last_y_pos, self.last_x_pos-4+i:self.last_x_pos+1+i])
@@ -56,8 +56,8 @@ class Gomokunarabe:
             print ('\n\n')
             return 0
 
-        #end = time.time() - start
-        #print("winner判定に" + str(end) + "[s]")
+        end = time.time() - start
+        print("winner判定に" + str(end) + "[s]")
         return False
 
 
@@ -348,7 +348,7 @@ if __name__ == '__main__':
         # print(env.winner())
         
         #勝敗判定
-        if env.winner()==env.White or env.winner()==env.Black:
+        if env.winner()== (env.White or env.Black):
             env.display_screen()
             # print(env.winner())
             # print('aa')
@@ -358,7 +358,7 @@ if __name__ == '__main__':
         #敵のターン
         env.enemy_turn()    
 
-        if env.winner()==env.White or env.winner()==env.Black:
+        if env.winner()== (env.White or env.Black):
             env.display_screen()
             # print(env.winner())
             # print('aa')
