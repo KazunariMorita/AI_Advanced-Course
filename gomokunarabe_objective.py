@@ -18,7 +18,7 @@ class Gomokunarabe:
         self.screen_n_rows = 15
         self.screen_n_cols = 15
         self.enable_actions = np.arange(self.screen_n_cols*self.screen_n_rows)
-        self.screen = np.zeros((self.screen_n_rows, self.screen_n_cols))
+        self.screen = np.zeros((self.screen_n_rows, self.screen_n_cols), dtype=np.int8)
         self.last_x_pos = 0
         self.last_y_pos = 0
 
@@ -30,7 +30,6 @@ class Gomokunarabe:
 
     #勝った方のラベル返す(いたら)
     def winner(self):
-        start = time.time()
         #横と縦と斜め右下と斜め左下の判定
         for i in range(5):
             width = np.sum(self.screen[self.last_y_pos, self.last_x_pos-4+i:self.last_x_pos+1+i])
@@ -56,8 +55,7 @@ class Gomokunarabe:
             print ('\n\n')
             return 0
 
-        end = time.time() - start
-        print("winner判定に" + str(end) + "[s]")
+        
         return False
 
 
@@ -348,6 +346,7 @@ if __name__ == '__main__':
         # print(env.winner())
         
         #勝敗判定
+        start = time.time()
         if env.winner() == env.White:
             env.display_screen()
             # print(env.winner())
@@ -355,6 +354,8 @@ if __name__ == '__main__':
             end_flag=True
             break
 
+        end = time.time() - start
+        print("winner判定に" + str(end) + "[s]")
         #敵のターン
         env.enemy_turn()    
 
