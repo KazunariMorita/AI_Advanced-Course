@@ -6,7 +6,7 @@ import glob
 import sys
 #2018/06/19
 #made by Kazunari Morita
-
+import time
 
 class Gomokunarabe:
 
@@ -30,88 +30,23 @@ class Gomokunarabe:
 
     #勝った方のラベル返す(いたら)
     def winner(self):
-        #横と縦の判定
+        #start = time.time()
+        #横と縦と斜め右下と斜め左下の判定
         for i in range(5):
-            if (np.sum(self.screen[self.last_y_pos, self.last_x_pos-4+i:self.last_x_pos+1+i]) == 5) == True or (np.sum(self.screen[self.last_y_pos-4+i:self.last_y_pos+1+i, self.last_x_pos]) == 5) == True:
+            width = np.sum(self.screen[self.last_y_pos, self.last_x_pos-4+i:self.last_x_pos+1+i])
+            height = np.sum(self.screen[self.last_y_pos-4+i:self.last_y_pos+1+i, self.last_x_pos])
+            right_diagonal = np.sum(np.diag(self.screen[self.last_y_pos-4+i:self.last_y_pos+1+i, self.last_x_pos-4+i:self.last_x_pos+1+i]))
+            left_diagonal = np.sum(np.diag(self.screen[self.last_y_pos-i:self.last_y_pos+5-i, self.last_x_pos-4+i:self.last_x_pos+1+i][:, ::-1]))            
+            if (width == 5) or (height == 5) or (right_diagonal == 5) or (left_diagonal == 5):
                 print ('\n\n')
                 print ('You Win')
                 print ('\n\n')
                 return self.White
-            if (np.sum(self.screen[self.last_y_pos, self.last_x_pos-4+i:self.last_x_pos+i]) == -5) == True or (np.sum(self.screen[self.last_y_pos-4+i:self.last_y_pos+1+i, self.last_x_pos]) == -5) == True:
+            if (width == -5) or (height == -5) or (right_diagonal == -5) or (left_diagonal == -5):
                 print ('\n\n')
                 print ('You Lose')
                 print ('\n\n')                
                 return self.Black
-
-            
-        #斜め(右下)の判定
-        for i in range(11):
-            for j in range(11):
-                p_judge=0
-                e_judge=0
-                for k in range(5):
-                    if self.screen[i+k][j+k]==1:
-                        p_judge+=1
-                        e_judge=0
-                    if self.screen[i+k][j+k]==-1:
-                        e_judge+=1
-                        p_judge=0
-
-                    if self.screen[i+k][j+k]==0:
-                        #もし, 連続していなかったら0
-                        p_judge=0
-                        e_judge=0
-
-                    if p_judge>=5:
-                        #盤面の描画
-                        # self.display_screen()
-                    
-                        print ('You Win')
-                        print ('\n\n')
-                        return self.White
-                    
-                    if e_judge>=5:
-                        #盤面の描画
-                        # self.display_screen()
-                    
-                        print ('\n\n')                        
-                        print ('You Lose')
-                        print ('\n\n')
-                        return self.Black
-
-        #斜め(左下)の判定    
-        for i in range(11):
-            for j in range(4,15):
-                p_judge=0
-                e_judge=0
-                for k in range(5):
-                    if self.screen[i+k][j-k]==1:
-                        p_judge+=1
-                        e_judge=0
-                    if self.screen[i+k][j-k]==-1:
-                        e_judge+=1
-                        p_judge=0
-                    if self.screen[i+k][j-k]==0:
-                        #もし, 連続していなかったら0
-                        p_judge=0
-                        e_judge=0
-
-                    if p_judge>=5:
-                        #盤面の描画
-                        # self.display_screen()
-                    
-                        print ('You Win')
-                        print ('\n\n')
-                        return 1
-                    
-                    if e_judge>=5:
-                        #盤面の描画
-                        # self.display_screen()
-                    
-                        print ('You Lose')
-                        print ('\n\n')
-                        return -1
-
         #引き分け判定
         if 0 not in self.screen:
             #盤面の描画
@@ -121,6 +56,8 @@ class Gomokunarabe:
             print ('\n\n')
             return 0
 
+        #end = time.time() - start
+        #print("winner判定に" + str(end) + "[s]")
         return False
 
 
