@@ -41,14 +41,13 @@ class Gomokunarabe:
                 print ('\n\n')
                 print ('You Win')
                 print ('\n\n')
-                self.win_flag = self.White
-                return self.win_flag
+                return self.White
             if (width == -5) or (height == -5) or (right_diagonal == -5) or (left_diagonal == -5):
                 print ('\n\n')
                 print ('You Lose')
                 print ('\n\n')   
-                self.win_flag = self.Black
-                return self.win_flag             
+                #self.win_flag = self.Black
+                return self.Black             
         #引き分け判定
         if 0 not in self.screen:
             #盤面の描画
@@ -56,8 +55,8 @@ class Gomokunarabe:
                     
             print ('Draw')
             print ('\n\n')
-            self.win_flag = 2
-            return self.win_flag
+
+            return 2
 
         
         return False
@@ -352,6 +351,7 @@ if __name__ == '__main__':
         
         #勝敗判定
         #start = time.time()
+        env.win_flag = env.winner()
         end_flag = env.isEnd()
         if end_flag == True:
             env.display_screen()
@@ -362,6 +362,7 @@ if __name__ == '__main__':
         #敵のターン
         env.enemy_turn()    
 
+        env.win_flag = env.winner()
         end_flag = env.isEnd()
         if end_flag == True:
             env.display_screen()
