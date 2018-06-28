@@ -8,12 +8,12 @@ from dqn_agent import DQNAgent
 if __name__ == "__main__":
     
     # parameters
-    n_epochs = 1000
+    n_epochs = 5
     # environment, agent
     env = Gomokunarabe()
  
     # playerID    
-    playerID = [env.Black,env.White,env.Blank]#env.Blank, [-1,1,0]
+    playerID = [env.Black,env.White,env.Black] #[-1,1,-1]
 
     # player agent    
     players = []
