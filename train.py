@@ -77,7 +77,7 @@ if __name__ == "__main__":
                     print("player:{:1d} | pos:{:2d} | LOSS: {:.4f} | Q_MAX: {:.4f}".format(
                              playerID[i], action, loss, Q_max))
                     #毎回表示する
-                    env.display_screen()
+                    #env.display_screen()
                     # 行動を実行した結果
                     # env.win_flag = env.winner()
                     # if env.isEnd:
