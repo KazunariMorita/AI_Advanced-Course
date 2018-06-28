@@ -88,7 +88,9 @@ class Gomokunarabe:
         pos_y = int(action / self.screen_n_cols)
         pos_x = int(action-( pos_y * self.screen_n_cols))
         self.screen[pos_y][pos_x] = color
-
+        #
+        self.last_x_pos = pos_x
+        self.last_y_pos = pos_y
 
         # print(self.screen)
         n =  self.count_my_ball(color,action)

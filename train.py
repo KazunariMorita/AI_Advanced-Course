@@ -8,12 +8,12 @@ from dqn_agent import DQNAgent
 if __name__ == "__main__":
     
     # parameters
-    n_epochs = 5
+    n_epochs = 10
     # environment, agent
     env = Gomokunarabe()
  
     # playerID    
-    playerID = [env.Black,env.White,env.Black] #[-1,1,-1]
+    playerID = [env.Black,env.White] #[-1,1]
 
     # player agent    
     players = []
@@ -67,27 +67,35 @@ if __name__ == "__main__":
                     # 行動を選択  
                     action = players[i].select_action(state, targets, players[i].exploration)
                     # print (action)
-                    
+
                     # 行動を実行
                     env.update(action, playerID[i])
+
                     # for log
                     loss = players[i].current_loss
                     Q_max, Q_action = players[i].select_enable_action(state, targets)
                     print("player:{:1d} | pos:{:2d} | LOSS: {:.4f} | Q_MAX: {:.4f}".format(
                              playerID[i], action, loss, Q_max))
-                     
+                    #毎回表示する
+                    env.display_screen()
+                    # 行動を実行した結果
+                    # env.win_flag = env.winner()
+                    # if env.isEnd:
+                    #     break
 
                 # 行動を実行した結果
                 env.win_flag = env.winner()
                 terminal = env.isEnd()
+                if terminal == True:
+                    break
                 # print (env.screen)
 
         env.display_screen()
         #print (env.screen)                      
-        w = env.winner()
+        #w = env.winner()
         # print (w)
                             
-        print("EPOCH: {:03d}/{:03d} | WIN: player{:1d}".format(e, n_epochs, w))
+        print("EPOCH: {:03d}/{:03d} | WIN: player{:1d}".format(e, n_epochs, env.win_flag))
 
 
     # 保存は後攻のplayer2 を保存する。
