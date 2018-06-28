@@ -8,7 +8,7 @@ from dqn_agent import DQNAgent
 if __name__ == "__main__":
     
     # parameters
-    n_epochs = 300
+    n_epochs = 1000
     # environment, agent
     env = Gomokunarabe()
  
@@ -78,6 +78,7 @@ if __name__ == "__main__":
                      
 
                 # 行動を実行した結果
+                env.win_flag = env.winner()
                 terminal = env.isEnd()
                 # print (env.screen)
 
