@@ -32,7 +32,7 @@ if __name__ == "__main__":
             for i in range(0, len(players)): 
                 
                 state = env.screen
-                targets = env.get_enables(playerID[i])
+                targets = env.get_enables()
                 
                 if len(targets) > 0:
                     # どこかに置く場所がある場合 
@@ -46,11 +46,11 @@ if __name__ == "__main__":
                         end = tmp.isEnd()
                         #次の状態
                         state_X = tmp.screen
-                        target_X = tmp.get_enables(playerID[i+1])
+                        target_X = tmp.get_enables()
 
 
                         if len(target_X) == 0:
-                            target_X = tmp.get_enables(playerID[i])
+                            target_X = tmp.get_enables()
 
                         # 両者トレーニング
                         for j in range(0, len(players)):

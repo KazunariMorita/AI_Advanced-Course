@@ -71,7 +71,7 @@ class Gomokunarabe:
         return self.screen[r][c]  
 
 
-    def get_enables(self,color):
+    def get_enables(self):
         result = []
         #おける座標のリストを返す
         for action in self.enable_actions:
