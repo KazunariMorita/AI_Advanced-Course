@@ -259,25 +259,29 @@ class Gomokunarabe:
 
     #プレイヤーのターン
     def player_turn(self):
-        print ('Your Turn')
+        #print ('Your Turn')
         
-
-        p_x_pos = input('select ball x pos > ')
-        p_y_pos = input('select ball y pos > ')
+        #自動
+        p_x_pos = random.randint(1,15)
+        p_y_pos = random.randint(1,15)
+        #p_x_pos = input('select ball x pos > ')
+        #p_y_pos = input('select ball y pos > ')
         while int(p_x_pos)<1 or int(p_x_pos)>15 or  int(p_y_pos)<1 or int(p_y_pos)>15 or self.screen[int(p_y_pos)-1][int(p_x_pos)-1] == self.White or  self.screen[int(p_y_pos)-1][int(p_x_pos)-1] == self.Black: 
 
-            print ('please retry')
+            #print ('please retry')
 
-            p_x_pos = input('select ball x pos > ')
-            p_y_pos = input('select ball y pos > ')
-
+            #p_x_pos = input('select ball x pos > ')
+            #p_y_pos = input('select ball y pos > ')
+            #自動
+            p_x_pos = random.randint(1,15)
+            p_y_pos = random.randint(1,15)
         self.screen[int(p_y_pos)-1][int(p_x_pos)-1] = self.White
         self.last_x_pos = int(p_x_pos) - 1
         self.last_y_pos = int(p_y_pos) - 1
 
     #敵のターン
     def enemy_turn(self):
-        print ('Enemy Turn')
+        #print ('Enemy Turn')
         
         #敵(ランダム)で配置
         e_x_pos = random.randint(0,14)
@@ -344,7 +348,7 @@ if __name__ == '__main__':
     while not end_flag:
 
         #盤面の描画
-        env.display_screen()
+        #env.display_screen()
 
         #プレイヤーのターン
         env.player_turn()
