@@ -7,6 +7,7 @@ import sys
 #2018/06/19
 #made by Kazunari Morita
 import time
+import joblib
 
 class Gomokunarabe:
 
