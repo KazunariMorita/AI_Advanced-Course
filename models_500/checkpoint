@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/media/ueno/AI_Advanced-Course/models/gomokunarabe_objective.ckpt"
+all_model_checkpoint_paths: "/home/media/ueno/AI_Advanced-Course/models/gomokunarabe_objective.ckpt"
