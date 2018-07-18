@@ -294,25 +294,28 @@ class Gomokunarabe:
         
     def player_turn(self,event,x,y,flags,param):      
         #クリックした位置にコマを配置
-        
+        #while(1):
         if event == cv2.EVENT_LBUTTONDOWN:    
             x=getNearestValue(rows_line, x)
             y=getNearestValue(cols_line, y)
-            print('x座標'+str(x))
-            print('y座標'+str(y))
+
         
-                 
+                
             if self.screen[y][x]==0:
                 self.screen[y][x]=self.Black
                 self.last_x_pos=int(x)
                 self.last_y_pos=int(y)
-               
+                print('player x:'+str(self.last_x_pos))
+                print('player y:'+str(self.last_y_pos))
+                
+
                 cv2.circle(self.img,(self.last_x_pos*30+15,self.last_y_pos*30+15), 13, (0,0,0), -1)
                 self.win_flag = self.winner()
                 if self.win_flag==0:
                     self.mode = self.White 
                 else:
                     self.mode = 0
+                    
                 
                 
             else:
@@ -343,17 +346,15 @@ class Gomokunarabe:
 
 
 
-        parser = argparse.ArgumentParser()
-        parser.add_argument("-m", "--model_path")
-        parser.add_argument("-s", "--save", dest="save", action="store_true")
-        parser.set_defaults(save=False) 
-        args = parser.parse_args()
-        enables = env.get_enables()
-        agent = DQNAgent(env.enable_actions, env.name, env.screen_n_rows, env.screen_n_cols)
-        agent.load_model(args.model_path)
-        qvalue, action_t = agent.select_enable_action(env.screen, enables)
+        # parser = argparse.ArgumentParser()
+        # parser.add_argument("-m", "--model_path")
+        # parser.add_argument("-s", "--save", dest="save", action="store_true")
+        # parser.set_defaults(save=False) 
+        # args = parser.parse_args()
+        enables = self.get_enables()        
+        qvalue, action_t = agent.select_enable_action(self.screen, enables)
         print('>>>  {:}'.format(action_t))              
-        env.update(action_t, 2)
+        env.update(action_t, self.White)
         
         e_y_pos = int(action_t / env.screen_n_cols)
         e_x_pos = int(action_t-( e_y_pos * env.screen_n_cols))  
@@ -364,6 +365,8 @@ class Gomokunarabe:
         self.last_x_pos=e_x_pos
         self.last_y_pos=e_y_pos
         
+        print("enemy x:" + str(self.last_x_pos))
+        print("enemy y:" + str(self.last_y_pos))
         self.screen[self.last_y_pos][self.last_x_pos]=self.White
         cv2.circle(self.img,(self.last_x_pos*30+15,self.last_y_pos*30+15), 13, (255,255,255), -1)
 
@@ -384,8 +387,18 @@ class Gomokunarabe:
         
 if __name__ == '__main__':
    
+    #AI読み込み
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-m", "--model_path")
+    parser.add_argument("-s", "--save", dest="save", action="store_true")
+    parser.set_defaults(save=False) 
+    args = parser.parse_args()
+
     env = Gomokunarabe()
-    
+    agent = DQNAgent(env.enable_actions, env.name, env.screen_n_rows, env.screen_n_cols)
+    #agent.load_model(args.model_path)
+    agent.load_model("models/gomokunarabe_objective.ckpt")
+
     rows_line= [i*30+15 for i in range(env.screen_n_rows)]
     cols_line= [i*30+15 for i in range(env.screen_n_cols)]
     
@@ -412,19 +425,21 @@ if __name__ == '__main__':
         #cv2.imshow('img',env.img)
         env.display_screen()
      
-        if env.mode==env.Black:      
+        if env.mode==env.Black:
+            print("player turn")
             cv2.setMouseCallback('img',env.player_turn)
         
              
         elif env.mode==env.White:
-             
+            print("enemy turn")
             env.enemy_turn()          
-        
+
         elif env.mode==0:
             env.mode=0
+            env.display_screen()
             break
-   
-        key = cv2.waitKey(1)  
+        print("loop")
+        key = cv2.waitKey(100)  
         # qが押された場合は終了する
         if key == ord('q'):
             break
