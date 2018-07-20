@@ -1,7 +1,7 @@
 from collections import deque
 import os
 import sys
-
+import shutil
 import numpy as np
 import tensorflow as tf
 
@@ -31,11 +31,63 @@ class DQNAgent:
         # replay memory
         self.D = deque(maxlen=self.replay_memory_size)
 
-        # model
+        # mode load
+        # self.load_model_retrain()
         self.init_model()
 
         # variables
         self.current_loss = 0.0
+
+    def load_model_retrain(self):
+
+        self.sess = tf.Session()
+ 
+         # input layer (rows x cols)
+        self.x = tf.placeholder(tf.float32, [None, self.rows, self.cols])
+
+        # flatten (rows x cols)
+        size = self.rows * self.cols
+        x_flat = tf.reshape(self.x, [-1, size])
+
+        # fully connected layer (32)
+        W_fc1 = tf.Variable(tf.truncated_normal([size, size], stddev=0.01))
+        b_fc1 = tf.Variable(tf.zeros([size]))
+        h_fc1 = tf.nn.relu(tf.matmul(x_flat, W_fc1) + b_fc1)
+
+        # output layer (n_actions)
+        W_out = tf.Variable(tf.truncated_normal([size, self.n_actions], stddev=0.01))
+        b_out = tf.Variable(tf.zeros([self.n_actions]))
+        self.y = tf.matmul(h_fc1, W_out) + b_out
+
+        # loss function
+        self.y_ = tf.placeholder(tf.float32, [None, self.n_actions])
+        self.loss = tf.reduce_mean(tf.square(self.y_ - self.y))
+
+        # train operation
+        optimizer = tf.train.RMSPropOptimizer(self.learning_rate)
+        self.training = optimizer.minimize(self.loss)
+
+
+        # self.sess = tf.Session()
+        self.saver = tf.train.Saver()
+
+        # 学習モデルを読み込む準備
+        # self.saver = tf.train.import_meta_graph("./models_1500/gomokunarabe_objective.ckpt.meta") # 追加
+
+        
+
+        # 学習モデルの読み込み、利用できるようにする
+        self.saver.restore(self.sess, "./models_1500/gomokunarabe_objective.ckpt")
+
+        self.saver = tf.train.Saver()
+
+        # self.sess = tf.Session()
+        
+        self.sess.run(tf.initialize_all_variables())
+        # print 
+
+
+
 
     def init_model(self):
         # input layer (rows x cols)
@@ -69,6 +121,7 @@ class DQNAgent:
         # session
         self.sess = tf.Session()
         self.sess.run(tf.initialize_all_variables())
+
 
     def Q_values(self, state):
         # Q(state, action) of all actions
@@ -142,4 +195,12 @@ class DQNAgent:
                 self.saver.restore(self.sess, checkpoint.model_checkpoint_path)
 
     def save_model(self):
-        self.saver.save(self.sess, os.path.join(self.model_dir, self.model_name))
+
+        try:
+            os.makedirs('./models')
+        except:
+            shutil.rmdir(',.models')
+
+            
+            
+        self.saver.save(self.sess, './models/model.ckpt')
