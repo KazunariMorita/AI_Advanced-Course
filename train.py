@@ -8,7 +8,7 @@ from dqn_agent import DQNAgent
 if __name__ == "__main__":
     
     # parameters
-    n_epochs = 500
+    n_epochs = 700
     # environment, agent
     env = Gomokunarabe()
  
