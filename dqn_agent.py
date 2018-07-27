@@ -77,7 +77,7 @@ class DQNAgent:
         
 
         # 学習モデルの読み込み、利用できるようにする
-        self.saver.restore(self.sess, "./models_1500/gomokunarabe_objective.ckpt")
+        self.saver.restore(self.sess, "./models_2200/model.ckpt")
 
         self.saver = tf.train.Saver()
 
