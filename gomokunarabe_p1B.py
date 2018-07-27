@@ -397,7 +397,7 @@ if __name__ == '__main__':
     env = Gomokunarabe()
     agent = DQNAgent(env.enable_actions, env.name, env.screen_n_rows, env.screen_n_cols)
     #agent.load_model(args.model_path)
-    agent.load_model("models/gomokunarabe_objective.ckpt")
+    agent.load_model("models_2900/model.ckpt")
 
     rows_line= [i*30+15 for i in range(env.screen_n_rows)]
     cols_line= [i*30+15 for i in range(env.screen_n_cols)]
